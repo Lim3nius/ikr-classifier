@@ -99,6 +99,7 @@ def train_gmm(x, ws, mus, covs):
     matrix MUs, covariance matrices given by M-by-D-by-D matrix COVs and vector
     of weights Ws.
     """   
+    print("aaaa\n")
     gamma = np.vstack([np.log(w) + logpdf_gauss(x, m, c) for w, m, c in zip(ws, mus, covs)])
     logevidence = logsumexp(gamma, axis=0)
     gamma = np.exp(gamma - logevidence)
