@@ -12,7 +12,7 @@ from numpy import argmax, mean, diff, log
 from matplotlib.mlab import find
 from scipy.signal import blackmanharris, fftconvolve
 from time import time
-from scipy.misc import logsumexp
+from scipy.special import logsumexp
 import sys
 
 
@@ -61,7 +61,7 @@ def filter(s, eshift, ewin, treshold):
 	#shape = window.size * x.shape[0] + window.size
 	mask = np.mean(x**2, axis=1) > treshold
 	mask[-1] = False
-	x[mask,:eshift] = 0
+	# x[mask,:eshift] = 0
 	x = x[np.invert(mask)]
 	x = np.append(x[:,:eshift], x[-1,eshift:])
 	# odkomentovat ak bude padat
@@ -70,20 +70,19 @@ def filter(s, eshift, ewin, treshold):
 	# filt = x.copy()
 	return x
 
-def features(f, fs):
+def features(f, fs, treshold_koef = 0.75, window = 250 , noverlap = 200):
 	# fs, f = wavfile.read(file)
 	sd.default.samplerate=fs
-	window = 200
-	noverlap = 120
 	nfft = 256
 	nbanks = 23
 	nceps = 13
 	snrdb = 40
 
-	treshold = (f[15000:20000]**2).mean()*0.5
-	s = f[20000:].copy()
-	x = filter(s, 200, 400, treshold)
-	freq = freq_from_autocorr(x, fs)
+	treshold = (f[15000:20000]**2).mean()*treshold_koef
+	s = f[20000:]
+	# x = filter(s, 200, 400, treshold)
+	x=s
+	freq = freq_from_autocorr(s, fs)
 
 	window = np.hamming(window)
 
@@ -91,6 +90,10 @@ def features(f, fs):
 	shape = ((x.shape[0] - window.size) // shift+1 , window.size)+ x.shape[1:]
 	strides = (x.strides[0] * shift, x.strides[0]) + x.strides[1:]
 	xw = np.lib.stride_tricks.as_strided(x, shape=shape, strides=strides)
+	mask = np.mean(xw**2, axis=1) > treshold
+	mask[-1] = False
+	# xw[mask,:shift] = 0
+	xw = xw[np.invert(mask)]
 
 	fend = 0.5 * fs
 	fstart = 32
