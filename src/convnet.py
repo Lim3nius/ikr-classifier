@@ -16,18 +16,27 @@ img_height, img_width=80, 80
 
 # Possible to add some transformations for bigger variability - smaller chance of over training and specializations
 train_data_generator = ImageDataGenerator(rotation_range=3,
-                                          horizontal_flip=True) # Some rotation & flipping
+                                          horizontal_flip=True,
+) # Some rotation & flipping
 test_data_generator = ImageDataGenerator()
 
-train_gen = train_data_generator.flow_from_directory('data/train',
+eval_data_generator = ImageDataGenerator()
+
+train_gen = train_data_generator.flow_from_directory('../data/train',
                                                      target_size=(img_width,img_height),
                                                      batch_size=8,
                                                      # save_to_dir='previews/',
                                                      # save_format='png'
 )
-test_gen = test_data_generator.flow_from_directory('data/validation',
+test_gen = test_data_generator.flow_from_directory('../data/validation',
                                                    target_size=(img_width,img_height),
-                                                   batch_size=8)
+                                                   batch_size=8,
+)
+
+eval_gen = eval_data_generator.flow_from_directory('../data/eval',
+                                                   target_size=(img_width,img_height),
+                                                   batch_size=8,
+)
 
 
 # Set correct input shape
@@ -63,7 +72,7 @@ model.add(Dense(4096, activation='relu'))
 model.add(Dense(1038, activation='relu'))
 model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.17)) # overtraining protection
-model.summary()
+# model.summary()
 model.add(Dense(number_of_classes, activation='softmax')) # The last layer - determining who is who
 
 # model.compile(loss=keras.losses.categorical_crossentropy,
@@ -81,6 +90,7 @@ model.fit_generator(train_gen,
                     epochs=epochs,
                     validation_data=test_gen,
                     validation_steps=train_gen.samples // batch_size,
+                    verbose=0
 )
 
 score = model.evaluate_generator(test_gen)
@@ -93,4 +103,11 @@ results = [(x,list(y)) for (x,y) in results]
 
 trains = list(zip(train_gen.filenames, model.predict_generator(train_gen)))
 trains = [(x,list(y)) for (x,y) in trains]
-print(results)
+
+# print(results)
+evals = list(zip(eval_gen.filenames, model.predict_generator(eval_gen)))
+evals = [(x,list(y)) for (x,y) in evals]
+
+with open('results_cnn.txt', mode='w') as ff:
+    for (x,y) in evals:
+        print('{} {} {} '.format(x, max(y), 1 if y[0] > y[1] else 0), file=ff, end='\n')
