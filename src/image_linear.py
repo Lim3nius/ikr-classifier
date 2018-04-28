@@ -105,7 +105,7 @@ def main():
     hit_count = 0
     for k, v in eval_data.iteritems():
         res = w.dot(v) + w0
-        #res -= np.log(dat1.shape[0] / float(dat2.shape[0]))
+        res -= np.log(dat1.shape[0] / float(dat2.shape[0]))
         if res > 0:
             hit_count += 1
             print k, res, "1"
