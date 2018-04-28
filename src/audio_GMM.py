@@ -65,27 +65,6 @@ def train_modelA(target_dirs, non_target_dirs, tgauss = 4, ngauss = 11):
         ws2, mus2, covs2, ttl2 = ft.train_gmm(non_target_coef, ws2, mus2, covs2)
         print("target error:", ttl1, "non target error: ", ttl2)
 
-    # target_freq_post = []
-    # target_mfcc_post = []
-    # print("Ploting training data")
-    # for freq in target_frequency:
-    #     target_freq_post.append(scipy.stats.norm.logpdf(freq, mu_freq1, cov_freq1) + np.log(0.5)-(scipy.stats.norm.logpdf(freq, mu_freq2, cov_freq2) - np.log(0.5)))
-    #     tmp =[]
-    #     for coef in target_coef:
-    #         tmp.append(ft.logpdf_gmm(coef, ws1, mus1, covs1) + np.log(0.5) - ft.logpdf_gmm(coef, ws2, mus2, cov2) - np.log(0.5))
-    #     target_mfcc_post.append(np.mean(tmp))
-    # non_target_freq_post = []
-    # non_target_mfcc_post = []
-    # for freq in non_target_frequency:
-    #     non_target_freq_post.append(scipy.stats.norm.logpdf(freq, mu_freq1, cov_freq1) + np.log(0.5)-(scipy.stats.norm.logpdf(freq, mu_freq2, cov_freq2) - np.log(0.5)))
-    #     tmp =[]
-    #     for coef in target_coef:
-    #         tmp.append(ft.logpdf_gmm(coef, ws1, mus1, covs1) + np.log(0.5) - ft.logpdf_gmm(coef, ws2, mus2, cov2) - np.log(0.5))
-    #     non_target_mfcc_post.append(np.mean(tmp))
-
-    # scatter(non_target_mfcc_post, non_target_freq_post,label='non_target_train')
-    # scatter(target_mfcc_post, target_freq_post, label='target_train')
-
     return (mu_freq1, mu_freq2), (cov_freq1, cov_freq2), (mus1, mus2), (covs1, covs2), (ws1, ws2)
 
 
@@ -107,6 +86,5 @@ def test_modelA(test_dirs, muf, covf, mug, covg, ws, fs = 16000):
             soft = hard > 8.25 
             result[file] = (hard, soft)
             print(file,hard, soft)
-            # mfcc_posterior.append(np.mean(tmp))
-    # fin = scipy.stats.norm.logpdf(freq_posterior, mup[0], covp[0]) - scipy.stats.norm.logpdf(freq_posterior, mup[0], covp[0])
+            
     return result
