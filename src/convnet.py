@@ -110,4 +110,4 @@ evals = [(x,list(y)) for (x,y) in evals]
 
 with open('results_cnn.txt', mode='w') as ff:
     for (x,y) in evals:
-        print('{} {} {} '.format(x, max(y), 1 if y[0] > y[1] else 0), file=ff, end='\n')
+        print('{} {} {}'.format(x, max(y), 1 if y[0] > y[1] else 0), file=ff, end='\n')
