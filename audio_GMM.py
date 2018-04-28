@@ -11,9 +11,6 @@ from glob import glob
 import math
 from ikrlib import logistic_sigmoid, logpdf_gauss
 
-def foo():
-    print(1)
-
 def train_modelA(target_dirs, non_target_dirs, tgauss = 4, ngauss = 11):
     target_coef = []
     target_frequency = []

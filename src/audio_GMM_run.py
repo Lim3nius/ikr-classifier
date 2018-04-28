@@ -1,9 +1,9 @@
-from voice import train_modelA, test_modelA
+from audio_GMM import train_modelA, test_modelA
 import matplotlib.pyplot as plt
 import numpy as np
 
-muf, covf, mug, covg, ws = train_modelA(['data/target_1/', 'data/target_2/', 'data/target_3/'],['data/non_target_train/', 'data/non_target_dev'])
-target =test_modelA(['data/target_1/', 'data/target_2', 'data/target_3'],muf,covf, mug, covg, ws)
+muf, covf, mug, covg, ws = train_modelA(['data/target_dev', 'data/target_train'],['data/non_target_train/', 'data/non_target_dev'])
+target =test_modelA(['data/target_dev', 'data/target_train'],muf,covf, mug, covg, ws)
 non_target = test_modelA(['data/non_target_dev/', 'data/non_target_train/'],muf,covf, mug, covg, ws)
 eval_data = test_modelA(['data/eval/'],muf,covf, mug, covg, ws)
 
