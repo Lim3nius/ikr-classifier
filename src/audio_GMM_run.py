@@ -8,7 +8,7 @@ muf, covf, mug, covg, ws = train_modelA(['data/target_dev', 'data/target_train']
 eval_data = test_modelA(['data/target_train/'],muf,covf, mug, covg, ws)
 
 print("Writing results to file")
-file = open('../audio_GMM.txt', 'w')
+file = open('../results_speech.txt', 'w')
 for key, value in eval_data.items():
 	file.write(key[:-4])
 	file.write(' ')

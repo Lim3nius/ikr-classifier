@@ -3,7 +3,7 @@ Projekt do předmětu IKR 2017/2018
 
 ## Klasifikace řeči
 Výsledky v souboru `results_speech.txt`.
-Spoštění pomocí `test.py`.
+Spoštění pomocí `audio_GMM_run.py`.
 
 ## Lineární klasifikátor obrazu
 Využívá základní lineární klasifikaci z ikrlib.py.
