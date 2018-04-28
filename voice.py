@@ -92,24 +92,24 @@ def train_modelA(target_dirs, non_target_dirs, tgauss = 4, ngauss = 11):
     return (mu_freq1, mu_freq2), (cov_freq1, cov_freq2), (mus1, mus2), (covs1, covs2), (ws1, ws2)
 
 
-def test_modelA(test_dirs, muf, covf, mug, covg, ws, soft = False, fs = 16000):
+def test_modelA(test_dirs, muf, covf, mug, covg, ws, fs = 16000):
     freq_posterior = []
     mfcc_posterior = []
+    result = {}
     for dir_name in test_dirs:
-        for f in glob(dir_name + '/*.wav'):
-            print('Processing file: ', f)
-            fs, f = wavfile.read(f)
+        for file in glob(dir_name + '/*.wav'):
+            print('Processing file: ', file)
+            fs, f = wavfile.read(file)
             mfcc, freq = ft.features(f, fs)
-            freq_posterior.append(scipy.stats.norm.logpdf(freq, muf[0], covf[0]) + np.log(0.5) - (scipy.stats.norm.logpdf(freq, muf[1], covf[1]) - np.log(0.5)))
+            freq_posterior = scipy.stats.norm.logpdf(freq, muf[0], covf[0]) + np.log(0.5) - (scipy.stats.norm.logpdf(freq, muf[1], covf[1]) - np.log(0.5))
             mfcc = np.vstack(mfcc)
             tmp =[]
             for coef in mfcc:
                 tmp.append(ft.logpdf_gmm(coef, ws[0], mug[0], covg[0]) + np.log(0.5) - ft.logpdf_gmm(coef, ws[1], mug[1], covg[1]) - np.log(0.5))
-            print(np.mean(tmp)+freq_posterior[-1])
-            mfcc_posterior.append(np.mean(tmp))
+            hard = np.mean(tmp)+freq_posterior
+            soft = hard > 8.25 
+            result[file] = (hard, soft)
+            print(file,hard, soft)
+            # mfcc_posterior.append(np.mean(tmp))
     # fin = scipy.stats.norm.logpdf(freq_posterior, mup[0], covp[0]) - scipy.stats.norm.logpdf(freq_posterior, mup[0], covp[0])
-    res = np.array(freq_posterior)+np.array(mfcc_posterior)
-    if (soft is True):
-        return res
-
-    return res > 8.3
+    return result
