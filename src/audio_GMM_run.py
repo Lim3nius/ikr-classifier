@@ -5,16 +5,16 @@ import numpy as np
 muf, covf, mug, covg, ws = train_modelA(['data/target_dev', 'data/target_train'],['data/non_target_train/', 'data/non_target_dev'])
 # target =test_modelA(['data/target_dev', 'data/target_train'],muf,covf, mug, covg, ws)
 # non_target = test_modelA(['data/non_target_dev/', 'data/non_target_train/'],muf,covf, mug, covg, ws)
-eval_data = test_modelA(['data/target_train/'],muf,covf, mug, covg, ws)
+eval_data = test_modelA(['data/eval/'],muf,covf, mug, covg, ws)
 
 print("Writing results to file")
 file = open('../results_speech.txt', 'w')
 for key, value in eval_data.items():
 	file.write(key[:-4])
 	file.write(' ')
-	file.write(value[0])
+	file.write(str(value[0])
 	file.write(' ')
-	file.write(int(value[1]))
+	file.write(str(int(value[1]))
 	file.write("\n")
 	print(key[:-4], value[0], int(value[1]))
 

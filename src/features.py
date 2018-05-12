@@ -55,23 +55,19 @@ def freq_from_autocorr(sig, fs):
     return fs / px
 
 def filter(s, eshift, ewin, treshold):
+    """
+    """
 	shape = ((s.shape[0] - ewin) // eshift+1 , ewin)+ s.shape[1:]
 	strides = (s.strides[0] * eshift, s.strides[0]) + s.strides[1:]
 	x = np.lib.stride_tricks.as_strided(s, shape=shape, strides=strides)
-	#shape = window.size * x.shape[0] + window.size
 	mask = np.mean(x**2, axis=1) > treshold
 	mask[-1] = False
-	# x[mask,:eshift] = 0
 	x = x[np.invert(mask)]
 	x = np.append(x[:,:eshift], x[-1,eshift:])
-	# odkomentovat ak bude padat
-	# noise = rand(x.shape[0])
-	# x = x + noise.dot(norm(x,2)) / norm(noise, 2)/ (10 **(snrdb/20))
-	# filt = x.copy()
+
 	return x
 
 def features(f, fs, treshold_koef = 0.75, window = 250 , noverlap = 200):
-	# fs, f = wavfile.read(file)
 	sd.default.samplerate=fs
 	nfft = 256
 	nbanks = 23
